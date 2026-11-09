@@ -37,6 +37,24 @@ nav a{color:rgba(255,255,255,.6);text-align:center;font-size:12px;font-weight:60
 nav a.on{color:#fff}
 nav .scan{width:62px;height:62px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-34px}
 svg{display:block}
+
+#lock{position:fixed;inset:0;z-index:100;background:#e01b22;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(40px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px));user-select:none;-webkit-user-select:none}
+#lock.gone{display:none}
+#lock .logo{width:84px;height:84px;border:4px solid #fff;display:grid;place-items:center}
+#lock h2{margin:0;font-weight:400;font-size:28px;text-align:center}
+#lock .dots{display:flex;gap:26px;height:18px}
+#lock .dots i{width:17px;height:17px;border-radius:50%;background:rgba(255,255,255,.55);transition:background .1s}
+#lock .dots i.on{background:#fff}
+#lock .dots.shake{animation:sh .35s}
+@keyframes sh{20%{transform:translateX(-12px)}40%{transform:translateX(12px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
+#lock .pad{display:grid;grid-template-columns:repeat(3,76px);gap:20px 28px;align-items:center;justify-items:center}
+#lock .pad button{width:76px;height:76px;border-radius:50%;border:3px solid #fff;background:transparent;color:#fff;font:700 28px/1 "Poppins","Helvetica Neue",Arial,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#lock .pad button:active{background:rgba(255,255,255,.25)}
+#lock .pad .txt{border:0;font-size:16px;color:rgba(255,255,255,.75);width:auto}
+#lock .pad .txt:active{background:none}
+#lock .pad .face{border:0;display:grid;place-items:center}
+#lock .ver{color:rgba(255,255,255,.65);font-size:16px;letter-spacing:1px}
+@media (max-height:700px){#lock .pad{gap:12px 24px}#lock .pad button{width:64px;height:64px;font-size:24px}#lock .pad{grid-template-columns:repeat(3,64px)}}
 </style>
 </head>
 <body>
@@ -65,6 +83,19 @@ svg{display:block}
   <a href="#more"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>MORE</a>
 </nav>
 
+<div id="lock">
+  <div class="logo"><svg viewBox="0 0 48 48" width="52" height="52" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"><path d="M24 4L12 30h12zM26 12v18h6z" fill="#fff" stroke="none"/><path d="M8 33h32M12 38c2-2 4-2 6 0s4 2 6 0 4-2 6 0 4 2 6 0" stroke-linecap="round"/></svg></div>
+  <h2>Enter your PIN Code</h2>
+  <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
+  <div class="pad" id="pad">
+    <button>1</button><button>2</button><button>3</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>7</button><button>8</button><button>9</button>
+    <button class="txt" id="forgot">FORGOT?</button><button>0</button>
+    <button class="face" aria-label="Face ID"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M9 9v2M15 9v2M12 9v4M9 16c1.5 1.5 4.5 1.5 6 0"/></svg></button>
+  </div>
+  <div class="ver">2.1.48.384</div>
+</div>
 <script>
 var fallback=[
  {t:"SAVINGS ACCOUNT",n:"IBRM.EEHAAB",no:"7706487158101",a:"2,279.21",c:"MVR",k:"sa",i:"SA"},
@@ -101,7 +132,26 @@ setInterval(load,60000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
 var hidden=false,btn=document.getElementById("toggle");
 btn.onclick=function(){hidden=!hidden;document.getElementById("app").classList.toggle("hide",hidden);btn.textContent=hidden?"Show balance":"Hide balance"};
+
+/* ===== PIN LOCK ===== */
+var PIN="0000",entry="",lock=document.getElementById("lock"),dots=document.querySelectorAll("#dots i"),dotsBox=document.getElementById("dots");
+function paint(){for(var i=0;i<4;i++)dots[i].classList.toggle("on",i<entry.length)}
+function press(d){
+  if(lock.classList.contains("gone")||entry.length>=4)return;
+  entry+=d;paint();
+  if(entry.length===4){
+    setTimeout(function(){
+      if(entry===PIN){lock.classList.add("gone")}
+      else{dotsBox.classList.add("shake");setTimeout(function(){dotsBox.classList.remove("shake")},400)}
+      entry="";paint();
+    },150);
+  }
+}
+document.querySelectorAll("#pad button").forEach(function(b){
+  if(/^[0-9]$/.test(b.textContent))b.addEventListener("click",function(){press(b.textContent)});
+});
+document.getElementById("forgot").onclick=function(){alert("Contact your bank to reset your PIN.")};
+document.addEventListener("keydown",function(e){if(/^[0-9]$/.test(e.key))press(e.key);else if(e.key==="Backspace"){entry=entry.slice(0,-1);paint()}});
 </script>
 </body>
 </html>
-
