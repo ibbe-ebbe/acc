@@ -1,1 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Accounts</title>
+<style>
+:root{--bg:#f5f5f5;--card:#fff;--text:#1a1a1a;--muted:#8a8a8f;--line:#e4e4e6;--red:#e31b23;--sa:#c9c93a;--ca:#2b2f66;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111;--card:#1e1e20;--text:#f2f2f2;--muted:#9a9aa0;--line:#333}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Poppins","Helvetica Neue",Arial,sans-serif}
+.app{max-width:480px;margin:0 auto;padding:20px 18px 110px}
+header{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px}
+header small{display:block;color:var(--muted);font-size:17px}
+header h1{margin:0;font-size:28px;font-weight:600}
+.icons{display:flex;align-items:center;gap:14px}
+.bell{position:relative;width:34px;height:34px}
+.bell span{position:absolute;right:-14px;bottom:-4px;border:1.5px solid var(--red);color:var(--red);background:var(--bg);border-radius:10px;font-size:10px;padding:0 5px}
+.avatar{width:52px;height:52px;border-radius:50%;background:var(--red);display:grid;place-items:center;position:relative}
+.avatar i{position:absolute;right:0;bottom:2px;width:10px;height:10px;background:#222;border-radius:50%}
+.row{display:flex;justify-content:space-between;color:var(--muted);font-size:15px;margin:26px 8px 10px}
+.row button{background:none;border:0;color:var(--muted);font:inherit;cursor:pointer}
+.card{background:var(--card);border-radius:20px;padding:6px 18px}
+.acc{display:flex;align-items:center;gap:14px;padding:18px 0;border-bottom:1.5px solid var(--line)}
+.acc:last-child{border-bottom:0}
+.dot{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:19px}
+.dot.sa{background:var(--sa)}.dot.ca{background:var(--ca)}
+.info{flex:1;min-width:0}
+.info b{display:block;font-weight:400;font-size:17px;line-height:1.3;text-transform:uppercase}
+.info b.mixed{text-transform:none}
+.info em{display:block;font-style:normal;color:var(--muted);font-size:15px;line-height:1.4}
+.amt{text-align:right;font-size:18px;white-space:nowrap}
+.amt small{display:block;color:var(--muted);font-size:15px}
+.hide .amt{filter:blur(7px)}
+nav{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:var(--red);border-radius:30px 30px 0 0;display:flex;justify-content:space-around;align-items:center;padding:14px 6px calc(22px + env(safe-area-inset-bottom,0px))}
+nav a{color:rgba(255,255,255,.6);text-align:center;font-size:12px;font-weight:600;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:20%}
+nav a.on{color:#fff}
+nav .scan{width:62px;height:62px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-top:-34px}
+svg{display:block}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div><small>Personal</small><h1>Accounts</h1></div>
+    <div class="icons">
+      <div class="bell"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#e31b23" stroke-width="1.6"><path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4zM10 21h4"/></svg><span>9+</span></div>
+      <svg viewBox="0 0 24 24" width="44" height="44" fill="#e31b23"><path d="M12 1l4 7 7 4-7 4-4 7-4-7-7-4 7-4z"/></svg>
+      <div class="avatar"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6z"/></svg><i></i></div>
+    </div>
+  </header>
+
+  <div class="row"><span>Current &amp; Savings</span><button id="toggle">Hide balance</button></div>
+
+  <section class="card" id="list"></section>
+
+  <div class="row"><span>Credit Cards</span></div>
+</div>
+
+<nav>
+  <a href="#wallet"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M16 12h5v3h-5z"/></svg>WALLET</a>
+  <a href="#accounts" class="on"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 14h5"/></svg>ACCOUNTS</a>
+  <a href="#scan" class="scan" aria-label="Scan"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#e31b23" stroke-width="1.8" stroke-linecap="round"><path d="M4 9V6a2 2 0 0 1 2-2h3M15 4h3a2 2 0 0 1 2 2v3M20 15v3a2 2 0 0 1-2 2h-3M9 20H6a2 2 0 0 1-2-2v-3M4 12h16"/></svg></a>
+  <a href="#transfer"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h15l-3-3M20 16H5l3 3"/></svg>TRANSFER</a>
+  <a href="#more"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>MORE</a>
+</nav>
+
+<script>
+var fallback=[
+ {t:"SAVINGS ACCOUNT",n:"IBRM.EEHAAB",no:"7706487158101",a:"2,279.21",c:"MVR",k:"sa",i:"SA"},
+ {t:"SAVINGS ACCOUNT",n:"IBRM.EEHAAB",no:"7730000204065",a:"36,000.00",c:"MVR",k:"sa",i:"SA"},
+ {t:"CURRENT ACCOUNT(PERSONAL)",n:"IBRM.EEHAAB",no:"7730000596314",a:"94,529.44",c:"MVR",k:"ca",i:"CA"},
+ {t:"Wadiah Business Current Account",n:"BEARLOAD",no:"7770000212938",a:"-2,000.00",c:"MVR",k:"ca",i:"CA",m:1},
+ {t:"Wadiah Business Current Account",n:"INSTANT TRANSFER",no:"7770000233134",a:"-2,000.00",c:"MVR",k:"ca",i:"CA",m:1},
+ {t:"BML ISLAMIC SAVINGS ACCOUNT",n:"IBRAHIM EEHAAB",no:"7770000261147",a:"0.49",c:"USD",k:"sa",i:"SA"}
+];
+var list=document.getElementById("list");
+function render(accounts){list.innerHTML="";
+accounts.forEach(function(x){
+  var d=document.createElement("div");d.className="acc";
+  d.innerHTML='<div class="dot '+x.k+'">'+x.i+'</div><div class="info"><b class="'+(x.m?'mixed':'')+'">'+x.t+'</b><em>'+x.n+'</em><em>'+x.no+'</em></div><div class="amt">'+x.a+'<small>'+x.c+'</small></div>';
+  list.appendChild(d);
+});}
+
+/* ===== GOOGLE SHEET ===== */
+var SHEET_ID="170CIVU1zrXmurMy-NUnvXsiSp7bVgZkRe1XgtNwqKyE", TAB="Sheet1";
+function fmt(v){var n=parseFloat(String(v).replace(/,/g,""));return isNaN(n)?v:n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function parseCSV(t){var r=[],row=[],c="",q=false;for(var i=0;i<t.length;i++){var ch=t[i];if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==","){row.push(c);c=""}else if(ch=="\n"){row.push(c);r.push(row);row=[];c=""}else if(ch!="\r")c+=ch}if(c||row.length){row.push(c);r.push(row)}return r}
+function load(){
+  if(SHEET_ID.indexOf("PASTE")===0){render(fallback);return}
+  fetch("https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:csv&sheet="+encodeURIComponent(TAB)+"&_="+Date.now())
+   .then(function(r){return r.text()})
+   .then(function(t){
+     var rows=parseCSV(t).slice(1).filter(function(r){return r[0]});
+     render(rows.map(function(r){var ty=(r[5]||"SA").toUpperCase();
+       return {t:r[0],n:r[1],no:r[2],a:fmt(r[3]),c:r[4],k:ty=="CA"?"ca":"sa",i:ty,m:r[0]!==r[0].toUpperCase()}}));
+   }).catch(function(){render(fallback)});
+}
+load();
+setInterval(load,60000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
+var hidden=false,btn=document.getElementById("toggle");
+btn.onclick=function(){hidden=!hidden;document.getElementById("app").classList.toggle("hide",hidden);btn.textContent=hidden?"Show balance":"Hide balance"};
+</script>
+</body>
+</html>
 
