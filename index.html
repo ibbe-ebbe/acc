@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Accounts</title>
 <style>
 :root{--bg:#f5f5f5;--card:#fff;--text:#1a1a1a;--muted:#8a8a8f;--line:#e4e4e6;--red:#e31b23;--sa:#c9c93a;--ca:#2b2f66;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -39,6 +39,7 @@ nav .scan{width:62px;height:62px;border-radius:50%;background:#fff;display:grid;
 svg{display:block}
 
 #lock{position:fixed;inset:0;z-index:100;background:#e01b22;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(40px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px));user-select:none;-webkit-user-select:none}
+html,body,#lock,#lock *{touch-action:manipulation;-webkit-text-size-adjust:100%}
 #lock.gone{display:none}
 #lock .logo{width:84px;height:84px;border:4px solid #fff;display:grid;place-items:center}
 #lock h2{margin:0;font-weight:400;font-size:28px;text-align:center}
@@ -152,6 +153,7 @@ document.querySelectorAll("#pad button").forEach(function(b){
 });
 document.getElementById("forgot").onclick=function(){alert("Contact your bank to reset your PIN.")};
 document.addEventListener("keydown",function(e){if(/^[0-9]$/.test(e.key))press(e.key);else if(e.key==="Backspace"){entry=entry.slice(0,-1);paint()}});
+document.addEventListener("gesturestart",function(e){e.preventDefault()});
 </script>
 </body>
 </html>
